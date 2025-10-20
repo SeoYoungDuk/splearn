@@ -4,6 +4,8 @@ import org.springframework.util.Assert;
 
 import java.util.Objects;
 
+import static org.springframework.util.Assert.*;
+
 public class Member {
     private String email;
 
@@ -39,7 +41,7 @@ public class Member {
 
 
     public void activate() {
-        if (this.status != MemberStatus.PENDING) throw new IllegalStateException("Pending 상태가 아닙니다.");
+        state(this.status == MemberStatus.PENDING, "Pending 상태가 아닙니다.");
         this.status = MemberStatus.ACTIVE;
 
 
