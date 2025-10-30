@@ -3,6 +3,8 @@ package com.tobyspring.splearn.domain;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.tobyspring.splearn.domain.MemberFixture.createMemberRegisterRequest;
+import static com.tobyspring.splearn.domain.MemberFixture.createPasswordEncoder;
 import static com.tobyspring.splearn.domain.MemberStatus.ACTIVE;
 import static com.tobyspring.splearn.domain.MemberStatus.DEACTIVATED;
 import static com.tobyspring.splearn.domain.MemberStatus.PENDING;
@@ -15,22 +17,12 @@ class MemberTest {
 
     @BeforeEach
     void setUp() {
-        this.passwordEncoder = new PasswordEncoder() {
-            @Override
-            public String encode(String password) {
-                return password.toUpperCase();
-            }
-
-            @Override
-            public boolean matches(String password, String passwordHash) {
-                return encode(password).equals(passwordHash);
-            }
-        };
-        member = Member.create(new MemberCreateRequest("toby@splearn.app", "toby", "secret"), passwordEncoder);
+        this.passwordEncoder = createPasswordEncoder();
+        member = Member.register(createMemberRegisterRequest(), passwordEncoder);
     }
 
     @Test
-    void createMember() {
+    void registerMember() {
         assertThat(member.getStatus()).isEqualTo(PENDING);
     }
 
@@ -67,6 +59,7 @@ class MemberTest {
 
         assertThatThrownBy(member::deactivate).isInstanceOf(IllegalStateException.class);
     }
+
     @Test
     void verifyPassword() {
         assertThat(member.verifyPassword("secret", passwordEncoder)).isTrue();
@@ -104,9 +97,9 @@ class MemberTest {
 
     @Test
     void invalidEmail() {
-        assertThatThrownBy(() -> Member.create(new MemberCreateRequest("invalid email", "toby", "secret"), passwordEncoder))
+        assertThatThrownBy(() -> Member.register(new MemberRegisterRequest("invalid email", "toby", "secret"), passwordEncoder))
                 .isInstanceOf(IllegalArgumentException.class);
 
-        Member.create(new MemberCreateRequest("valid@email.com", "toby", "secret"), passwordEncoder);
+        Member.register(createMemberRegisterRequest(), passwordEncoder);
     }
 }
