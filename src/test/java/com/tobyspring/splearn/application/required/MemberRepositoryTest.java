@@ -1,11 +1,11 @@
 package com.tobyspring.splearn.application.required;
 
+import com.tobyspring.splearn.domain.Member;
+import com.tobyspring.splearn.domain.MemberFixture;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class MemberRepositoryTest {
@@ -15,10 +15,10 @@ class MemberRepositoryTest {
     @Autowired
     EntityManager entityManager;
 
-
-
     @Test
     void registerMember() {
-//        assertThat()
+        Member member = memberRepository.save(Member.register(MemberFixture.createMemberRegisterRequest(), MemberFixture.createPasswordEncoder()));
+
+        entityManager.flush();
     }
 }
