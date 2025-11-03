@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 class MemberRepositoryTest {
     @Autowired
@@ -17,8 +19,14 @@ class MemberRepositoryTest {
 
     @Test
     void registerMember() {
-        Member member = memberRepository.save(Member.register(MemberFixture.createMemberRegisterRequest(), MemberFixture.createPasswordEncoder()));
+        Member member = Member.register(MemberFixture.createMemberRegisterRequest(), MemberFixture.createPasswordEncoder());
+
+        assertThat(member.getId()).isNull();
+
+        memberRepository.save(member);
 
         entityManager.flush();
+
+        assertThat(member.getId()).isNotNull();
     }
 }
