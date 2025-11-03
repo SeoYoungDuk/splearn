@@ -1,6 +1,5 @@
 package com.tobyspring.splearn.application;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import com.tobyspring.splearn.application.provided.MemberRegister;
 import com.tobyspring.splearn.application.required.EmailSender;
 import com.tobyspring.splearn.application.required.MemberRepository;
@@ -9,10 +8,15 @@ import com.tobyspring.splearn.domain.Email;
 import com.tobyspring.splearn.domain.Member;
 import com.tobyspring.splearn.domain.MemberRegisterRequest;
 import com.tobyspring.splearn.domain.PasswordEncoder;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
+@Transactional
 @RequiredArgsConstructor
+@Validated
 @Service
 public class MemberService implements MemberRegister {
     private final MemberRepository memberRepository;
