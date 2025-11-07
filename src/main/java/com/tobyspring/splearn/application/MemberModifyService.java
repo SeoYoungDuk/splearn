@@ -1,5 +1,6 @@
 package com.tobyspring.splearn.application;
 
+import com.tobyspring.splearn.application.provided.MemberFinder;
 import com.tobyspring.splearn.application.provided.MemberRegister;
 import com.tobyspring.splearn.application.required.EmailSender;
 import com.tobyspring.splearn.application.required.MemberRepository;
@@ -8,7 +9,6 @@ import com.tobyspring.splearn.domain.Email;
 import com.tobyspring.splearn.domain.Member;
 import com.tobyspring.splearn.domain.MemberRegisterRequest;
 import com.tobyspring.splearn.domain.PasswordEncoder;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +18,11 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 @Validated
 @Service
-public class MemberService implements MemberRegister {
+public class MemberModifyService implements MemberRegister {
     private final MemberRepository memberRepository;
     private final EmailSender emailSender;
     private final PasswordEncoder passwordEncoder;
+    private final MemberFinder memberFinder;
 
     @Override
     public Member register(MemberRegisterRequest registerRequest) {
@@ -38,6 +39,15 @@ public class MemberService implements MemberRegister {
         sendWelcomeEmail(member);
 
         return member;
+    }
+
+    @Override
+    public Member activate(Long memberId) {
+        Member member = memberFinder.find(memberId);
+
+        member.activate();
+
+        return memberRepository.save(member);
     }
 
     private void sendWelcomeEmail(Member member) {

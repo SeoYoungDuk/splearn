@@ -6,6 +6,7 @@ import com.tobyspring.splearn.domain.Member;
 import com.tobyspring.splearn.domain.MemberFixture;
 import com.tobyspring.splearn.domain.MemberRegisterRequest;
 import com.tobyspring.splearn.domain.MemberStatus;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @SpringBootTest
 @Transactional
 @Import(SplearnTestConfiguration.class)
-public record MemberRegisterTest(MemberRegister memberRegister) {
+record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityManager) {
 
     @Test
     void register() {
@@ -40,12 +41,26 @@ public record MemberRegisterTest(MemberRegister memberRegister) {
 
     @Test
     void memberRegisterRequestFail() {
-        extracted(new MemberRegisterRequest("toby@splearn.app", "Toby", "longsecret"));
-        extracted(new MemberRegisterRequest("toby@splearn.app", "Charlie______________________", "secret"));
-        extracted(new MemberRegisterRequest("tobysplearn.app", "Charlie______________________", "secret"));
+        checkValidation(new MemberRegisterRequest("toby@splearn.app", "Toby", "longsecret"));
+        checkValidation(new MemberRegisterRequest("toby@splearn.app", "Charlie______________________", "secret"));
+        checkValidation(new MemberRegisterRequest("tobysplearn.app", "Charlie______________________", "secret"));
     }
 
-    private void extracted(MemberRegisterRequest invalid) {
+    @Test
+    void activate() {
+        Member member = memberRegister.register(MemberFixture.createMemberRegisterRequest());
+        entityManager.flush();
+        entityManager.clear();
+
+        member = memberRegister.activate(member.getId());
+
+        entityManager.flush();
+        assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+
+        
+    }
+
+    private void checkValidation(MemberRegisterRequest invalid) {
         assertThatThrownBy(() -> memberRegister.register(invalid))
                 .isInstanceOf(ConstraintViolationException.class);
     }
