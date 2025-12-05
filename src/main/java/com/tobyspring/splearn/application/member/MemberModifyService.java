@@ -1,14 +1,11 @@
-package com.tobyspring.splearn.application;
+package com.tobyspring.splearn.application.member;
 
-import com.tobyspring.splearn.application.provided.MemberFinder;
-import com.tobyspring.splearn.application.provided.MemberRegister;
-import com.tobyspring.splearn.application.required.EmailSender;
-import com.tobyspring.splearn.application.required.MemberRepository;
-import com.tobyspring.splearn.domain.DuplicateEmailException;
-import com.tobyspring.splearn.domain.Email;
-import com.tobyspring.splearn.domain.Member;
-import com.tobyspring.splearn.domain.MemberRegisterRequest;
-import com.tobyspring.splearn.domain.PasswordEncoder;
+import com.tobyspring.splearn.application.member.provided.MemberFinder;
+import com.tobyspring.splearn.application.member.provided.MemberRegister;
+import com.tobyspring.splearn.application.member.required.EmailSender;
+import com.tobyspring.splearn.application.member.required.MemberRepository;
+import com.tobyspring.splearn.domain.member.*;
+import com.tobyspring.splearn.domain.shared.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +43,24 @@ public class MemberModifyService implements MemberRegister {
         Member member = memberFinder.find(memberId);
 
         member.activate();
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member deactivate(Long memberId) {
+        Member member = memberFinder.find(memberId);
+
+        member.deactivate();
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member updateInfo(Long memberId, MemberInfoUpdateRequest memberInfoUpdateRequest) {
+        Member member = memberFinder.find(memberId);
+
+        member.updateInfo(memberInfoUpdateRequest);
 
         return memberRepository.save(member);
     }

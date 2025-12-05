@@ -1,7 +1,8 @@
-package com.tobyspring.splearn.application.required;
+package com.tobyspring.splearn.application.member.required;
 
-import com.tobyspring.splearn.domain.Member;
-import com.tobyspring.splearn.domain.MemberFixture;
+import com.tobyspring.splearn.domain.member.Member;
+import com.tobyspring.splearn.domain.member.MemberFixture;
+import com.tobyspring.splearn.domain.member.MemberStatus;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,15 @@ class MemberRepositoryTest {
 
         memberRepository.save(member);
 
-        entityManager.flush();
-
         assertThat(member.getId()).isNotNull();
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Member found = memberRepository.findById(member.getId()).orElseThrow();
+        assertThat(found.getStatus()).isEqualTo(MemberStatus.PENDING);
+        assertThat(found.getDetail().getRegisteredAt()).isNotNull();
+
     }
 
     @Test

@@ -1,8 +1,8 @@
-package com.tobyspring.splearn.application.provided;
+package com.tobyspring.splearn.application.member.provided;
 
 import com.tobyspring.splearn.SplearnTestConfiguration;
-import com.tobyspring.splearn.domain.Member;
-import com.tobyspring.splearn.domain.MemberFixture;
+import com.tobyspring.splearn.domain.member.Member;
+import com.tobyspring.splearn.domain.member.MemberFixture;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

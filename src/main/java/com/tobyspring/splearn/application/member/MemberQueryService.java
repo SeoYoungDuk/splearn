@@ -1,8 +1,8 @@
-package com.tobyspring.splearn.application;
+package com.tobyspring.splearn.application.member;
 
-import com.tobyspring.splearn.application.provided.MemberFinder;
-import com.tobyspring.splearn.application.required.MemberRepository;
-import com.tobyspring.splearn.domain.Member;
+import com.tobyspring.splearn.application.member.provided.MemberFinder;
+import com.tobyspring.splearn.application.member.required.MemberRepository;
+import com.tobyspring.splearn.domain.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

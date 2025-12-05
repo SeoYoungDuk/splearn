@@ -1,6 +1,6 @@
 package com.tobyspring.splearn.adapter.integration;
 
-import com.tobyspring.splearn.domain.Email;
+import com.tobyspring.splearn.domain.shared.Email;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.StdIo;
 import org.junitpioneer.jupiter.StdOut;
