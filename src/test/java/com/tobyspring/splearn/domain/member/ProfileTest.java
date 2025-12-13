@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ProfileTest {
 
@@ -13,6 +12,7 @@ class ProfileTest {
         new Profile("tobites");
         new Profile("toby100");
         new Profile("12345");
+        new Profile("");
     }
 
 
