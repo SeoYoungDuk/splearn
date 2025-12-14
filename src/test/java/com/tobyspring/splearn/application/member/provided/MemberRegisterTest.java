@@ -103,15 +103,12 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
     @Test
     void updateInfoFail() {
         Member member = registerMember();
-
         memberRegister.activate(member.getId());
         var request = new MemberInfoUpdateRequest("Peter", "toby100", "자기소개");
-        member = memberRegister.updateInfo(member.getId(), request);
+        memberRegister.updateInfo(member.getId(), request);
 
         Member member2 = registerMember("toby2@spelearn.app");
-
         memberRegister.activate(member2.getId());
-
         entityManager.flush();
         entityManager.clear();
 
@@ -124,14 +121,14 @@ record MemberRegisterTest(MemberRegister memberRegister, EntityManager entityMan
         memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("James", "toby101", "Introduction"));
 
         //기본 프로필 주소를 바꾸는 것도 가능
-        memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("James", "toby100", "Introduction"));
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("James", "toby100", "Introduction"));
 
         //프로필 주소를 제거하는 것도 가능
-        memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("James", "", "Introduction"));
+        memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("James", "", "Introduction"));
 
         //프로필 주소 중복은 허용하지 않음
         assertThatThrownBy(() -> {
-            memberRegister.updateInfo(member2.getId(), new MemberInfoUpdateRequest("James", "toby101", "Introduction"));
+            memberRegister.updateInfo(member.getId(), new MemberInfoUpdateRequest("James", "toby101", "Introduction"));
         }).isInstanceOf(DuplicateProfileException.class);
 
     }
